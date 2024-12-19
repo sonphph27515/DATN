@@ -95,4 +95,26 @@ public class KhachHangService {
             System.out.println("KhachHangService.findById: null");
             return null;
         }
+        //user
+        public KhachHangResponse getByEmailAndMatKhau(String email, String matKhau) {
+            System.out.println("KhachHangService.getByEmailAndMatKhau: " + email + " " + matKhau);
+            return khachHangRepository.getByEmailAndMatKhau(email, matKhau);
+        }
+
+        public boolean existsByEmail(String email) {
+            System.out.println("KhachHangService.existsByEmail: " + email);
+            return khachHangRepository.existsByEmail(email);
+        }
+
+        public boolean isPasswordValid(String password) {
+            return password.matches("^(?=.*[a-zA-Z])(?=.*[0-9]).{6,}$");
+        }
+
+        public boolean isSoDienThoai(String soDienThoai) {
+            return soDienThoai.matches("^0[0-9]{9,10}$");
+        }
+
+        public boolean isEmail(String email) {
+            return email.matches("^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6})*$");
+        }
     }
