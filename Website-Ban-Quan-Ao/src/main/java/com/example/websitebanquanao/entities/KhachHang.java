@@ -1,4 +1,4 @@
-package com.example.demo.entities;
+package com.example.websitebanquanao.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -57,10 +57,10 @@ public class KhachHang {
     @Column(name = "trang_thai")
     private Integer trangThai;
 
-    @OneToMany(mappedBy = "idKhachHang")
-    private Set<GioHangChiTiet> gioHangs = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "idKhachHang")
-    private Set<HoaDon> hoaDons = new LinkedHashSet<>();
+//    @OneToMany(mappedBy = "idKhachHang")
+//    private Set<GioHangChiTiet> gioHangs = new LinkedHashSet<>();
+//
+//    @OneToMany(mappedBy = "idKhachHang")
+//    private Set<HoaDon> hoaDons = new LinkedHashSet<>();
 
 }

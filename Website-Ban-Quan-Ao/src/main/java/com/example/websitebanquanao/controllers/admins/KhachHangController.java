@@ -1,4 +1,4 @@
-package com.example.demo.controllers.admins;
+package com.example.websitebanquanao.controllers.admins;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
