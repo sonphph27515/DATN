@@ -6,32 +6,28 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.math.BigDecimal;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SanPhamChiTietRequest {
-
-    private UUID id;
-    private String maSanPham;
-    private UUID idSanPham;
-    private List<Integer> idMauSac;
-    private List<Integer> idKichCo;
-
-    private BigDecimal gia;
-    private Integer soLuong;
-    private String moTa;
-    private Integer trangThai;
+@Component
+public class SanPhamRequest {
+    private String ten;
+    private MultipartFile anh;
+    private Integer idLoai;
+    private Integer idThuongHieu;
+    private Integer idChatLieu;
     @Temporal(TemporalType.DATE)
     private Date ngay_tao;
-
     @Temporal(TemporalType.DATE)
     private Date ngay_sua;
-}
+    private Integer trang_thai;
+    private List<String> duongDan;
 
+}
