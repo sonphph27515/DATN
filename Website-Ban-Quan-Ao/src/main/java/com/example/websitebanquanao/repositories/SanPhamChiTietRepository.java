@@ -26,4 +26,8 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
 
     @Query("select new com.example.websitebanquanao.infrastructures.responses.SanPhamChiTietResponse(s.id, s.maSanPham,s.idSanPham.id, s.idSanPham.ten, s.idMauSac.ten, s.idKichCo.ten, s.gia, s.soLuong, s.moTa, s.trangThai, s.ngay_sua, s.ngay_tao)  from SanPhamChiTiet s where s.trangThai = 2 ORDER BY s.idSanPham.ten")
     public List<SanPhamChiTietResponse> Getlisttam();
+
+
+    @Query("SELECT CASE WHEN COUNT(sp) > 0 THEN TRUE ELSE FALSE END FROM SanPhamChiTiet sp WHERE sp.idSanPham.id = :idSanPham AND sp.idMauSac.id = :idMauSac AND sp.idKichCo.id = :idKichCo")
+    boolean checkTrung(@Param("idSanPham") UUID idSanPham, @Param("idMauSac") Integer idMauSac, @Param("idKichCo") Integer idKichCo);
 }
