@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -118,5 +119,146 @@ public class SanPhamChiTietService {
             }
         }
         return true;
+    }
+
+    public void update(SanPhamChiTietRequest sanPhamChiTietRequest, UUID id) {
+        SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findById(id).orElse(null);
+        if (sanPhamChiTiet != null) {
+            sanPhamChiTiet.setGia(sanPhamChiTietRequest.getGia());
+            sanPhamChiTiet.setSoLuong(sanPhamChiTietRequest.getSoLuong());
+            sanPhamChiTiet.setMoTa(sanPhamChiTietRequest.getMoTa());
+            sanPhamChiTiet.setTrangThai(sanPhamChiTietRequest.getTrangThai());
+
+            // Thiết lập ngày tạo là ngày hiện tại nếu chưa có
+            sanPhamChiTiet.setNgay_sua(new Date());
+
+            sanPhamChiTiet.setNgay_sua(new Date());
+            sanPhamChiTietRepository.save(sanPhamChiTiet);
+            System.out.println("SanPhamChiTietService.update: " + sanPhamChiTiet.getId());
+        }
+    }
+
+    public void updatetam(SanPhamChiTietRequest sanPhamChiTietRequest, UUID id) {
+        // Tìm đối tượng SanPhamChiTiet theo id
+        SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findById(id).orElse(null);
+
+        // Nếu tìm thấy đối tượng, cập nhật thông tin
+        if (sanPhamChiTiet != null) {
+            // Cập nhật các thuộc tính từ request
+            sanPhamChiTiet.setGia(sanPhamChiTietRequest.getGia());
+            sanPhamChiTiet.setSoLuong(sanPhamChiTietRequest.getSoLuong());
+            sanPhamChiTiet.setMoTa(sanPhamChiTietRequest.getMoTa());
+
+            // Thiết lập trạng thái là 2
+            sanPhamChiTiet.setTrangThai(2);
+
+            // Cập nhật ngày sửa là ngày hiện tại
+            sanPhamChiTiet.setNgay_sua(new Date());
+
+            // Lưu đối tượng vào cơ sở dữ liệu
+            sanPhamChiTietRepository.save(sanPhamChiTiet);
+
+            // In ra log để kiểm tra
+            System.out.println("SanPhamChiTietService.update: " + sanPhamChiTiet.getId());
+        }
+    }
+
+
+    @Transactional
+    public void updateList() {
+        List<SanPhamChiTietResponse> list = sanPhamChiTietRepository.Getlisttam();
+        for (SanPhamChiTietResponse entity : list) {
+            sanPhamChiTietRepository.updateTrangThai(entity.getId(), 1);
+        }
+    }
+
+
+    public void delete(UUID id) {
+        SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findById(id).orElse(null);
+        if (sanPhamChiTiet != null) {
+            sanPhamChiTietRepository.deleteById(id);
+            System.out.println("SanPhamChiTietService.delete: " + id);
+        }
+    }
+
+    public SanPhamChiTiet findById(UUID idSanPhamChiTiet) {
+        if (sanPhamChiTietRepository.findById(idSanPhamChiTiet).isPresent()) {
+            return sanPhamChiTietRepository.findById(idSanPhamChiTiet).get();
+        } else {
+            return null;
+        }
+    }
+
+    public void updateSoLuong(SanPhamChiTiet sanPhamChiTiet) {
+        sanPhamChiTietRepository.save(sanPhamChiTiet);
+    }
+
+    @Transactional
+    public void updateSoLuongAfterDelete(UUID idSanPhamChiTiet, int currentSoLuong) {
+        // Gọi phương thức tương ứng từ repository để thực hiện việc cập nhật số lượng
+        sanPhamChiTietRepository.updateSoLuongAfterDelete(idSanPhamChiTiet, currentSoLuong);
+    }
+
+    public List<SanPhamChiTiet> findByIdSanPham(UUID idSanPham) {
+        return sanPhamChiTietRepository.findSanPhamChiTietByIdSanPham(idSanPham);
+    }
+
+    public Page<SanPhamChiTietResponse> getByStatus(Integer trangThai,int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        return sanPhamChiTietRepository.getByStatus(trangThai,pageable);
+    }
+
+    public Page<SanPhamChiTietResponse> getByTenMauSac(String tenMauSac,int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        return sanPhamChiTietRepository.getByTenMauSac(tenMauSac,pageable);
+    }
+
+    public Page<SanPhamChiTietResponse> getByTenKichCo(String tenKichCo,int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        return sanPhamChiTietRepository.getByTenKichCo(tenKichCo,pageable);
+    }
+
+    // user
+    public SanPhamChiTiet getByIdSanPhamAndIdMauSacAndIdKichCo(UUID idSanPham, Integer idMauSac, Integer idKichCo) {
+        System.out.println("SanPhamChiTietService.getByIdSanPhamAndIdMauSacAndIdKichCo: " + idSanPham + " " + idMauSac + " " + idKichCo);
+        return sanPhamChiTietRepository.getByIdSanPhamAndIdMauSacAndIdKichCo(idSanPham, idMauSac, idKichCo);
+    }
+
+    @Transactional
+    public void updateSoLuongByIdSanPhamChiTiet(UUID idSanPhamChiTiet, int currentSoLuong) {
+        SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findById(idSanPhamChiTiet).orElse(null);
+
+        int soLuong = sanPhamChiTiet.getSoLuong() - currentSoLuong;
+
+        sanPhamChiTietRepository.updateSoLuongAfterDelete(idSanPhamChiTiet, soLuong);
+        System.out.println("SanPhamChiTietService.updateSoLuongByIdSanPhamChiTiet: " + idSanPhamChiTiet + " " + soLuong);
+    }
+
+
+    @Transactional
+    public void xuLyTraHangVaoKho(UUID idSanPhamChiTiet, int soLuongTraHang) {
+        // Lấy số lượng hiện tại trong kho
+        Integer soLuongHienTai = sanPhamChiTietRepository.getSoLuongSanPhamChiTietByIdSanPham(idSanPhamChiTiet);
+
+        // Cập nhật số lượng trong kho (cộng thêm số lượng trả hàng)
+        int soLuongDaCapNhat = soLuongHienTai + soLuongTraHang;
+        sanPhamChiTietRepository.updateSoLuongAfterDelete(idSanPhamChiTiet, soLuongDaCapNhat);
+    }
+
+    public Integer getSoLuongSanPhamChiTietByIdSanPham(UUID idSanPham) {
+        return sanPhamChiTietRepository.getSoLuongSanPhamChiTietByIdSanPham(idSanPham);
+    }
+
+    public SanPhamChiTiet findByMaSanPham(String maSanPham) {
+        return sanPhamChiTietRepository.findByMaSanPham(maSanPham);
+    }
+
+    public Integer getSoLuongSanPham(UUID idSanPham, Integer idMauSac, Integer idKichCo) {
+        return sanPhamChiTietRepository.getSoLuongSanPham(idSanPham, idMauSac, idKichCo);
+    }
+
+    public Page<SanPhamChiTietResponse> searchByTenSanPham(String tenSanPham,int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        return sanPhamChiTietRepository.getByTenSanPham(tenSanPham,pageable);
     }
     }
